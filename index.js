@@ -12,7 +12,7 @@ function run() {
   });
 
   rl.question('How many balls to cycle for mode one? ', (answer) => {
-    
+
 
     calculateTimeElapsed(parseInt(answer))
 
@@ -28,32 +28,27 @@ function modeOne(clockState) {
 
   let minutes = 0
 
-  do
-  {
+  do {
     ++minutes
     newClockState = moveBall(newClockState)
   }
-  while(!compareQueues(initialState, newClockState))
+  while (!compareQueues(initialState, newClockState))
 
   return minutes
 }
 
-function compareQueues(initialState, compareTo)
-{
+function compareQueues(initialState, compareTo) {
 
   let equals = true
 
-  if(compareTo.mainQueue.length !== initialState.mainQueue.length)
+  if (compareTo.mainQueue.length !== initialState.mainQueue.length)
     equals = false
-  else
-  {
-    for(let i = 0; i<initialState.mainQueue.length; i++)
-    {
-      if(initialState.mainQueue[i] !== compareTo.mainQueue[i])
-      {
+  else {
+    for (let i = 0; i < initialState.mainQueue.length; i++) {
+      if (initialState.mainQueue[i] !== compareTo.mainQueue[i]) {
         equals = false
         break;
-      }      
+      }
     }
   }
 
@@ -62,7 +57,12 @@ function compareQueues(initialState, compareTo)
 
 function moveBall(clockState) {
 
-  let {mainQueue, minutesStack, fivesStack, hoursStack} = clockState;
+  let {
+    mainQueue,
+    minutesStack,
+    fivesStack,
+    hoursStack
+  } = clockState;
 
   let [ball, ...tail] = mainQueue
   mainQueue = tail
@@ -132,10 +132,13 @@ function populateQueue(size) {
   }
 }
 
-function getNewClock(size)  {  
-  return { mainQueue: populateQueue(size), minutesStack: [], fivesStack: [], hoursStack: []}
+function getNewClock(size) {
+  return {
+    mainQueue: populateQueue(size),
+    minutesStack: [],
+    fivesStack: [],
+    hoursStack: []
+  }
 }
-
-
 
 run()
