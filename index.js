@@ -3,22 +3,22 @@
 const R = require('ramda')
 
 function run() {
-  calculateTimeElapsed(45)
-}
 
-function modeOneRecursive(clockState) {
-  const initialState = clockState
+  const readline = require('readline');
 
-  let doMoveBall = (minutes, currentClockState) => {
-    console.log(`minute number: ${minutes}`)
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-    if (R.equals(initialState.mainQueue, currentClockState.mainQueue))
-      return minutes;
-    else
-      setTimeout(()=>{ return doMoveBall(++minutes, moveBall(currentClockState));}, 0)
-  }
+  rl.question('How many balls to cycle for mode one? ', (answer) => {
+    
 
-  return doMoveBall(1, moveBall(initialState))
+    calculateTimeElapsed(parseInt(answer))
+
+    rl.close();
+  });
+
 }
 
 function modeOne(clockState) {
