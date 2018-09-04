@@ -1,32 +1,37 @@
 'use strict'
 
 const R = require('ramda')
+const promptly = require('promptly')
 
-function run() {
+async function run() {
 
-  const readline = require('readline');
+  const mode = await promptly.prompt('Which mode of calculation?  Press 1 for Mode One, Press 2 for Mode Two.')
 
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
+  if(mode === "1") {
+    const modeOneBalls = await promptly.prompt('How many balls to use in mode one?')
 
-  rl.question('How many balls to cycle for mode one? ', (answer) => {
+    calculateTimeElapsed(parseInt(modeOneBalls))
+  }
 
+  if(mode === "2") {
 
-    calculateTimeElapsed(parseInt(answer))
+    const minutes = await promptly.prompt('How many minutes to run for mode two? ')
+    const modeTwoBalls = await promptly.prompt('How many balls to use for mode two? ')
+    
+    const initialClockState = getNewClock(parseInt(modeTwoBalls))
 
-    rl.close();
-  });
+    const results = modeTwo(parseInt(minutes), initialClockState)
 
+    console.log(results)
+  }
 }
 
 function modeOne(clockState) {
 
-  let initialState = clockState
+  const initialState = clockState
   let newClockState = initialState
 
-  let minutes = 0
+  var minutes = 0
 
   do {
     ++minutes
@@ -35,6 +40,17 @@ function modeOne(clockState) {
   while (!compareQueues(initialState, newClockState))
 
   return minutes
+}
+
+function modeTwo(minutes, clockState)
+{
+  
+  for(let i = 0; i < minutes; i++ )
+  {
+    clockState = moveBall(clockState)
+  }
+
+  return JSON.stringify(clockState)
 }
 
 function compareQueues(initialState, compareTo) {
@@ -98,17 +114,16 @@ function calculateTimeElapsed(startingSize) {
 
     console.log('Starting Calculation')
 
-    console.time('modeOne-time')
+    const startTime = Date.now()
 
     const totalMinutes = modeOne(getNewClock(startingSize))
 
-    let timeEnd = console.timeEnd('modeOne-time')
-    console.log(`Time elapsed ${timeEnd/1000}s`)
-
-    console.log(`Total minutes: ${totalMinutes}`)
-
+    const endTime = Date.now()
+    const elapsed = endTime - startTime
     const totalDays = (totalMinutes / 60) / 24
-    console.log(`Total days: ${totalDays}`)
+
+    console.log(`${startingSize} balls cycle after ${totalDays} days.`)
+    console.log(`Completed in ${elapsed} milliseconds (${elapsed/1000}) seconds.`)
 
   } catch (e) {
     console.log(e.message)
@@ -124,7 +139,8 @@ function populateQueue(size) {
 
     for (let i = 1; i <= size; i++) {
       startingQueue.push({
-        id: i
+        id: i,
+        toString: ()=>this.id
       })
     }
 
