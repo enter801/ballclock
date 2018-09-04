@@ -138,10 +138,7 @@ function populateQueue(size) {
         var startingQueue = []
 
         for (let i = 1; i <= size; i++) {
-            startingQueue.push({
-                id: i,
-                toString: ()=>this.id
-            })
+            startingQueue.push(i)
         }
 
         return startingQueue
